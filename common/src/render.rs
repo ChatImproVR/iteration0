@@ -47,6 +47,7 @@ pub struct CameraComponent {
 }
 
 /// All information required to define a renderable mesh
+#[must_use]
 #[derive(Message, Serialize, Deserialize, Debug, Clone)]
 #[locality("Local")]
 pub struct UploadMesh {
@@ -191,5 +192,17 @@ impl Default for CameraComponent {
             clear_color: [0.; 3],
             projection: [Mat4::IDENTITY; 2],
         }
+    }
+}
+
+impl MeshHandle {
+    /// Returns an appropriate Render component.
+    pub fn render(self) -> Render {
+        Render::new(self)
+    }
+
+    /// Returns an appropriate UploadMesh message.
+    pub fn upload(self, mesh: Mesh) -> UploadMesh {
+        UploadMesh { mesh, id: self }
     }
 }

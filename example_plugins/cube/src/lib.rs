@@ -19,10 +19,7 @@ impl UserState for ClientState {
     fn new(io: &mut EngineIo, _sched: &mut EngineSchedule<Self>) -> Self {
         // Make the cube mesh available to the rendering engine
         // This defines the CUBE_HANDLE id to refer to the mesh we get from cube()
-        io.send(&UploadMesh {
-            mesh: cube(),
-            id: CUBE_HANDLE,
-        });
+        io.send(&CUBE_HANDLE.upload(cube()));
 
         Self
     }
@@ -37,7 +34,7 @@ impl UserState for ServerState {
             .add_component(Transform::default())
             // Attach the Render component, which details how the object should be drawn
             // Note that we use CUBE_HANDLE here, to tell the rendering engine to draw the cube
-            .add_component(Render::new(CUBE_HANDLE).primitive(Primitive::Triangles))
+            .add_component(CUBE_HANDLE.render().primitive(Primitive::Triangles))
             // Attach the Synchronized component, which will copy the object to clients
             .add_component(Synchronized)
             // And get the entity ID
